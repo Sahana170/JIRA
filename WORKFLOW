@@ -1,0 +1,33 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+    - 'main'
+    - '3.*'
+  pull_request:
+    branches:
+    - 'main'
+    - '3.*'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}-reusable
+  cancel-in-progress: true
+
+jobs:
+  check_source:
+    name: Change detection
+    # To use boolean outputs from this job, parse them as JSON.
+    # Here's some examples:
+    #
+    #   if: fromJSON(needs.check_source.outputs.run-docs)
+    #
+    #   ${{
+    #        fromJSON(needs.check_source.outputs.run_tests)
+    #        && 'truthy-branch'
+    #        || 'falsy-branch'
+    #   }}
